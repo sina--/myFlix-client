@@ -68,3 +68,6 @@ The **myFlix** app is a single-page, responsive web application designed for mov
 - It must be **hosted online**.
 - **React Redux** can be used for state management of at least one feature (e.g., movie filtering).
 
+## Build Instructions
+- Install parcel via npm
+- `parcel src/index.html`
