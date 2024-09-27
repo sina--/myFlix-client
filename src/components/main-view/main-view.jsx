@@ -1,10 +1,14 @@
 import { useState, useEffect } from "react";
 import { MovieCard } from "../movie-card/movie-card.jsx";
 import { MovieView } from "../movie-view/movie-view.jsx";
+import { LoginView } from "../login-view/login-view.jsx";
 
 export const MainView = () => {
   const [movies, setMovies] = useState([]);
-    useEffect(() => {
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [user, setuser] = useState(null);
+
+  useEffect(() => {
     fetch("https://sw-movie-flix-5fc48d8b332a.herokuapp.com/movies")
       .then((response) => response.json())
       .then((data) => {
@@ -15,7 +19,9 @@ export const MainView = () => {
       });
   }, []);
 
-  const [selectedMovie, setSelectedMovie] = useState(null);
+  if (!user) {
+    return <LoginView />;
+  }
 
   if (selectedMovie) {
     return (
