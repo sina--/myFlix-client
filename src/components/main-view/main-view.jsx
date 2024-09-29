@@ -4,15 +4,20 @@ import { MovieView } from "../movie-view/movie-view.jsx";
 import { LoginView } from "../login-view/login-view.jsx";
 
 export const MainView = () => {
+  const storedUser = JSON.parse(localStorage.getItem("user"));
+  const storedToken = localStorage.getItem("token");
+
+  const [user, setUser] = useState(storedUser? storedUser : null);
+  const [token, setToken] = useState(storedToken? storedToken : null);
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
 
   useEffect(() => {
     if (!token) {
+      console.log("no token");
       return;
     }
+    console.log(`token: ${token}`);
     fetch("https://sw-movie-flix-5fc48d8b332a.herokuapp.com/movies", {
       headers: { Authorization: `Bearer ${token}` }
     })
@@ -44,7 +49,14 @@ export const MainView = () => {
   }
 
   if (movies.length === 0) {
-    return <div>No Movies Found!</div>;
+    return (
+      <div>
+        <div>
+          No Movies Found!
+        </div>
+        <button onClick={() => { setUser(null); setToken(null); localStorage.clear(); }}>Logout</button>
+      </div>
+    );
   } else {
     return (
       <div>
@@ -61,7 +73,7 @@ export const MainView = () => {
             );
           })}
         </div>
-        <button onClick={() => { setUser(null); setToken(null); }}>Logout</button>
+        <button onClick={() => { setUser(null); setToken(null); localStorage.clear(); }}>Logout</button>
       </div>
 
     );
