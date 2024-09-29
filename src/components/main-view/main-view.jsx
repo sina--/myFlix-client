@@ -33,7 +33,7 @@ export const MainView = () => {
           setUser(user);
           setToken(token);
         }}
-      />;
+      />
     );
   }
 

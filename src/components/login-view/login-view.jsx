@@ -8,8 +8,8 @@ export const LoginView = ({ onLoggedIn }) => {
     event.preventDefault();
 
     const data = {
-      access: username,
-      secret: password
+      Username: username,
+      Password: password
     };
 
     //fetch("https://openlibrary.org/account/login.json", {
@@ -24,7 +24,7 @@ export const LoginView = ({ onLoggedIn }) => {
     //});
 
      fetch("https://sw-movie-flix-5fc48d8b332a.herokuapp.com/login", {
-       method: "POST:,",
+       method: "POST",
        headers: {
          "Content-Type": "application/json"
        },
