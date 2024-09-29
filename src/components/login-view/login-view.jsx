@@ -12,36 +12,36 @@ export const LoginView = ({ onLoggedIn }) => {
       secret: password
     };
 
-    fetch("https://openlibrary.org/account/login.json", {
-      method: "POST",
-      body: JSON.stringify(data)
-    }).then((response) => {
-      if (response.ok) {
-        onLoggedIn(username);
-      } else {
-        alert("Login failed");
-      }
-    });
+    //fetch("https://openlibrary.org/account/login.json", {
+    //  method: "POST",
+    //  body: JSON.stringify(data)
+    //}).then((response) => {
+    //  if (response.ok) {
+    //    onLoggedIn(username);
+    //  } else {
+    //    alert("Login failed");
+    //  }
+    //});
 
-    // fetch("YOUR_API_URL/login", {
-    //   method: "POST:,",
-    //   headers: {
-    //     "Content-Type": "application/json"
-    //   },
-    //   body: JSON.stringify(data)
-    // })
-    // .then((response) => response.json())
-    // .then((data) => {
-    //   console.log("Login response: ", data);
-    //   if (data.user) {
-    //     onLoggedIn(data.user, data.token);
-    //   } else {
-    //     alert("No such user");
-    //   }
-    // })
-    // .catch((e) => {
-    //   alert("Something went wrong");
-    // });
+     fetch("https://sw-movie-flix-5fc48d8b332a.herokuapp.com/login", {
+       method: "POST:,",
+       headers: {
+         "Content-Type": "application/json"
+       },
+       body: JSON.stringify(data)
+     })
+     .then((response) => response.json())
+     .then((data) => {
+       console.log("Login response: ", data);
+       if (data.user) {
+         onLoggedIn(data.user, data.token);
+       } else {
+         alert("No such user");
+       }
+     })
+     .catch((e) => {
+       alert("Something went wrong");
+     });
   };
 
   return (

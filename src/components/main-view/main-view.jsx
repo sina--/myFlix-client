@@ -6,21 +6,35 @@ import { LoginView } from "../login-view/login-view.jsx";
 export const MainView = () => {
   const [movies, setMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const [user, setuser] = useState(null);
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
 
   useEffect(() => {
-    fetch("https://sw-movie-flix-5fc48d8b332a.herokuapp.com/movies")
+    if (!token) {
+      return;
+    }
+    fetch("https://sw-movie-flix-5fc48d8b332a.herokuapp.com/movies", {
+      headers: { Authorization: `Bearer ${token}` }
+    })
       .then((response) => response.json())
       .then((data) => {
+        console.log(data);
         setMovies(data);
       })
       .catch((error) => {
         console.error("Error fetching movies:", error);
       });
-  }, []);
+  }, [token]);
 
   if (!user) {
-    return <LoginView onLoggedIn={(user) => setuser(user)} />;
+    return (
+      <LoginView
+        onLoggedIn={(user) => {
+          setUser(user);
+          setToken(token);
+        }}
+      />;
+    );
   }
 
   if (selectedMovie) {
@@ -47,7 +61,7 @@ export const MainView = () => {
             );
           })}
         </div>
-        <button onClick={() => { setuser(null); }}>Logout</button>
+        <button onClick={() => { setUser(null); setToken(null); }}>Logout</button>
       </div>
 
     );
