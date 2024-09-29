@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 
-export const LoginView = () => {
+export const LoginView = ({ onLoggedIn }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const handleSubmit = (event) => {
@@ -22,10 +22,30 @@ export const LoginView = () => {
         alert("Login failed");
       }
     });
+
+    // fetch("YOUR_API_URL/login", {
+    //   method: "POST:,",
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify(data)
+    // })
+    // .then((response) => response.json())
+    // .then((data) => {
+    //   console.log("Login response: ", data);
+    //   if (data.user) {
+    //     onLoggedIn(data.user, data.token);
+    //   } else {
+    //     alert("No such user");
+    //   }
+    // })
+    // .catch((e) => {
+    //   alert("Something went wrong");
+    // });
   };
 
   return (
-    <form>
+    <form onSubmit={handleSubmit}>
       <label>
         Username:
         <input
