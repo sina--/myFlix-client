@@ -20,7 +20,7 @@ export const MainView = () => {
   }, []);
 
   if (!user) {
-    return <LoginView />;
+    return <LoginView onLoggedIn={(user) => setuser(user)} />;
   }
 
   if (selectedMovie) {
@@ -34,18 +34,22 @@ export const MainView = () => {
   } else {
     return (
       <div>
-        {movies.map((movie) => {
-          return (
-            <MovieCard 
-              key={movie._id}
-              movieData={movie}
-              onMovieClick={(newSelectedMovie) => {
-                setSelectedMovie(newSelectedMovie);
-              }}
-            />
-          );
-        })}
+        <div>
+          {movies.map((movie) => {
+            return (
+              <MovieCard 
+                key={movie._id}
+                movieData={movie}
+                onMovieClick={(newSelectedMovie) => {
+                  setSelectedMovie(newSelectedMovie);
+                }}
+              />
+            );
+          })}
+        </div>
+        <button onClick={() => { setuser(null); }}>Logout</button>
       </div>
+
     );
   }
 };
