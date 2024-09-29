@@ -4,6 +4,7 @@ import { MovieView } from "../movie-view/movie-view.jsx";
 import { LoginView } from "../login-view/login-view.jsx";
 import { SignupView } from "../signup-view/signup-view.jsx";
 import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 
 export const MainView = () => {
   const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -30,25 +31,10 @@ export const MainView = () => {
       });
   }, [token]);
 
-  if (!user) {
-    return (
-      <>
-        <LoginView
-          onLoggedIn={(user) => {
-            setUser(user);
-            setToken(token);
-          }}
-        />
-        or
-        <SignupView />
-      </>
-    );
-  }
-
   return (
-    <Row>
+    <Row className="justify-content-md-center">
       {!user ? (
-        <>
+        <Col md={5}>
           <LoginView
             onLoggedIn={(user) => {
               setUser(user);
@@ -57,26 +43,29 @@ export const MainView = () => {
           />
           or
           <SignupView />
-        </>
+        </Col>
       ) : selectedMovie ? (
-        <MovieView 
-          movieData={selectedMovie}
-          onBackClick={() =>
-            setSelectedMovie(null)
-        }
-        />
+        <Col md={8}>
+          <MovieView 
+            movieData={selectedMovie}
+            onBackClick={() =>
+              setSelectedMovie(null)
+          }
+          />
+        </Col>
       ) : movies.length === 0 ? (
         <div>No Movies Found!</div>
       ) : (
         <>
           {movies.map((movie) => (
-            <MovieCard 
-              key={movie._id}
-              movieData={movie}
-              onMovieClick={(newSelectedMovie) => {
-                setSelectedMovie(newSelectedMovie);
-              }}
-            />
+            <Col className="mb-5" key={movie._id} md={3}>
+              <MovieCard 
+                movieData={movie}
+                onMovieClick={(newSelectedMovie) => {
+                  setSelectedMovie(newSelectedMovie);
+                }}
+              />
+            </Col>
           ))}
         </>
       )}
