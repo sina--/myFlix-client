@@ -28388,6 +28388,7 @@ const MainView = ()=>{
                 onClick: ()=>{
                     setUser(null);
                     setToken(null);
+                    setSelectedMovie(null);
                     localStorage.clear();
                 },
                 children: "Logout"

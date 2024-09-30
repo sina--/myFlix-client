@@ -6,4 +6,9 @@ $link-hover-color: darken(#7aa2f7, 10%);
 $primary: #7aa2f7;
 $secondary: #9aa5ce;
 
+.movie-poster {
+  width: 300px;
+  height: auto;
+}
+
 @import '~bootstrap/scss/bootstrap.scss';
