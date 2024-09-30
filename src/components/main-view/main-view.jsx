@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { NavigationBar } from "../navigation-bar/navigation-bar.jsx";
 import { MovieCard } from "../movie-card/movie-card.jsx";
 import { MovieView } from "../movie-view/movie-view.jsx";
 import { LoginView } from "../login-view/login-view.jsx";
@@ -31,10 +32,15 @@ export const MainView = () => {
       });
   }, [token]);
 
-  console.log(movies);
+  const onLoggedOut = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.clear();
+  };
 
   return (
     <BrowserRouter>
+      <NavigationBar user={user} onLoggedOut={onLoggedOut} />
       <Row className="justify-content-md-center">
         <Routes>
           <Route
