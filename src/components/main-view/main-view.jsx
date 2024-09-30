@@ -33,6 +33,8 @@ export const MainView = () => {
       });
   }, [token]);
 
+  console.log(movies);
+
   return (
     <BrowserRouter>
       <Row className="justify-content-md-center">
@@ -80,7 +82,7 @@ export const MainView = () => {
                   <Col>No movies found!</Col>
                 ) : (
                   <Col md={8}>
-                    <MovieView movieData={selectedMovie} />
+                    <MovieView movieData={movies} />
                   </Col>
                 )}
               </>
@@ -97,13 +99,8 @@ export const MainView = () => {
                 ) : (
                   <>
                     {movies.map((movie) => (
-                      <Col className="mb-5" key={movie._id} md={3}>
-                        <MovieCard 
-                          movieData={movie}
-                          onMovieClick={(newSelectedMovie) => {
-                            setSelectedMovie(newSelectedMovie);
-                          }}
-                        />
+                      <Col className="mb-4" key={movie._id} md={3}>
+                        <MovieCard movieData={movie} />
                       </Col>
                     ))}
                   </>
