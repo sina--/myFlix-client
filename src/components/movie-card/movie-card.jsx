@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Button, Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { FavoriteButton } from "../favorite-button/favorite-button.jsx";
 
 export const MovieCard = ({ movieData }) => {
   return (
@@ -11,6 +12,7 @@ export const MovieCard = ({ movieData }) => {
         <Card.Body>
           <Card.Title>{movieData.Title}</Card.Title>
           <Card.Text>{movieData.Description}</Card.Text>
+          <FavoriteButton />
         </Card.Body>
       </Link>
     </Card>
