@@ -16,6 +16,7 @@ export const MainView = () => {
   const [user, setUser] = useState(storedUser? storedUser : null);
   const [token, setToken] = useState(storedToken? storedToken : null);
   const [movies, setMovies] = useState([]);
+  const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     if (!token) {
@@ -105,7 +106,10 @@ export const MainView = () => {
                   <>
                     {movies.map((movie) => (
                       <Col className="mb-4" key={movie._id} md={3}>
-                        <MovieCard movieData={movie} />
+                        <MovieCard 
+                          movieData={movie}
+                          user={user}
+                        />
                       </Col>
                     ))}
                   </>

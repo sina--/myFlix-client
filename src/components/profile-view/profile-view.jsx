@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -10,7 +10,22 @@ export const ProfileView = ({ user }) => {
   const [password, setPassword] = useState("password");
   const [email, setEmail] = useState(user.Email);
   const [birthday, setBirthday] = useState(user.Birthday);
+  const [favorites, setFavorites] = useState([]);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetch(`https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${user.Username}`, {
+      headers: { Authorization: `Bearer ${localStorage.getItem('token')}`}
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setFavorites(data.Favorites); 
+      })
+      .catch((error) => {
+        console.error("Error fetching user favorites:", error);
+      });
+  }, [username]);
+  
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -108,6 +123,18 @@ export const ProfileView = ({ user }) => {
           Submit
         </Button>
       </Form>
+
+      <h3>Your Favorite Movies:</h3>
+      {favorites.length > 0 ? (
+        <ul>
+          {favorites.map((movieId, index) => (
+            <li key={index}>Movie ID: {movieId}</li>
+          ))}
+        </ul>
+      ) : (
+        <p>No favorite movies added yet.</p>
+      )}
+
       <Button variant="danger" onClick={deregister}>
         Delete User
       </Button>
