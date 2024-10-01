@@ -11,6 +11,11 @@
   display: flex;
 }
 
+.fav-btn {
+  backdrop-filter: blur(10px);
+  background-color: #f1f1f14d;
+}
+
 *, :after, :before {
   box-sizing: border-box;
 }
