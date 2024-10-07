@@ -14,15 +14,15 @@ export const SignupView = () => {
       Username: username,
       Password: password,
       Email: email,
-      Birthday: birthday
+      Birthday: birthday,
     };
 
     fetch("https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users", {
       method: "POST",
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     }).then((response) => {
       if (response.ok) {
         alert("Success");

@@ -8,15 +8,18 @@ export const MovieCard = ({ movieData, isFav, toggleFavorite }) => {
   return (
     <Card className="h-100">
       {/* Only the rest of the card links to the MovieView */}
-      <Link to={`/movies/${encodeURIComponent(movieData._id)}`} className="text-decoration-none text-reset">
-        <Card.Img variant="top" src={movieData.Poster}/>
+      <Link
+        to={`/movies/${encodeURIComponent(movieData._id)}`}
+        className="text-decoration-none text-reset"
+      >
+        <Card.Img variant="top" src={movieData.Poster} />
         <Card.Body>
           <Card.Title>{movieData.Title}</Card.Title>
           <Card.Text>{movieData.Description}</Card.Text>
         </Card.Body>
       </Link>
       <div style={{ position: "absolute", top: 10, right: 10 }}>
-        <FavoriteButton 
+        <FavoriteButton
           isFav={isFav}
           movieId={movieData._id}
           toggleFavorite={toggleFavorite}
@@ -31,11 +34,11 @@ MovieCard.propTypes = {
     Title: PropTypes.string.isRequired,
     Description: PropTypes.string.isRequired,
     Director: PropTypes.shape({
-      Name: PropTypes.string.isRequired
+      Name: PropTypes.string.isRequired,
     }),
     Genre: PropTypes.shape({
-      Name: PropTypes.string.isRequired
+      Name: PropTypes.string.isRequired,
     }),
-    Poster: PropTypes.string.isRequired
+    Poster: PropTypes.string.isRequired,
   }).isRequired,
 };

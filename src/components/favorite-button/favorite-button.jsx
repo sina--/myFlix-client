@@ -6,7 +6,7 @@ import "./favorite-button.scss";
 export const FavoriteButton = ({ isFav, movieId, toggleFavorite }) => {
   const handleClick = (event) => {
     toggleFavorite(movieId);
-  }
+  };
 
   return (
     <Button className="fav-btn" variant="outline-danger" onClick={handleClick}>
