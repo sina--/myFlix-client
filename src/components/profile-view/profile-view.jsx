@@ -3,30 +3,55 @@ import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
 import { useNavigate } from "react-router-dom";
+import { MovieCard } from "../movie-card/movie-card.jsx";
 
-export const ProfileView = ({ user }) => {
+export const ProfileView = ({ user, toggleFavorite }) => {
   const [username, setUsername] = useState(user.Username);
   const [password, setPassword] = useState("password");
   const [email, setEmail] = useState(user.Email);
   const [birthday, setBirthday] = useState(user.Birthday);
   const [favorites, setFavorites] = useState([]);
+  const [movies, setMovies] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${user.Username}`, {
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}`}
-    })
+    fetch(
+      `https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${user.Username}`,
+      {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      },
+    )
       .then((response) => response.json())
       .then((data) => {
-        setFavorites(data.Favorites); 
+        setFavorites(data.Favorites);
       })
       .catch((error) => {
         console.error("Error fetching user favorites:", error);
       });
   }, [username]);
-  
 
+  useEffect(() => {
+    if (favorites.length > 0) {
+      fetch("https://sw-movie-flix-5fc48d8b332a.herokuapp.com/movies", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const favMovies = data.filter((movie) =>
+            favorites.includes(movie._id),
+          );
+          setMovies(favMovies);
+        })
+        .catch((error) => {
+          console.error("Error fetching favorite movies:", error);
+        });
+    }
+  }, [favorites]);
+
+  // TODO: Allow user profile updates
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -34,15 +59,15 @@ export const ProfileView = ({ user }) => {
       Username: username,
       Password: password,
       Email: email,
-      Birthday: birthday
+      Birthday: birthday,
     };
 
     fetch("https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users", {
       method: "PUT",
       body: JSON.stringify(data),
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     }).then((response) => {
       if (response.ok) {
         alert("Success");
@@ -52,7 +77,7 @@ export const ProfileView = ({ user }) => {
       }
     });
   };
-  
+
   const deregister = (event) => {
     event.preventDefault();
 
@@ -60,15 +85,19 @@ export const ProfileView = ({ user }) => {
       Username: username,
       Password: password,
       Email: email,
-      Birthday: birthday
+      Birthday: birthday,
     };
 
-    fetch(`https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${username}/deregister`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${localStorage.getItem('token')}`,
-        "Content-Type": "application/json"
+    fetch(
+      `https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${username}/deregister`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
       },
-    }).then((response) => {
+    ).then((response) => {
       if (response.ok) {
         alert(`${username} successfully deleted`);
         localStorage.clear();
@@ -125,12 +154,18 @@ export const ProfileView = ({ user }) => {
       </Form>
 
       <h3>Your Favorite Movies:</h3>
-      {favorites.length > 0 ? (
-        <ul>
-          {favorites.map((movieId, index) => (
-            <li key={index}>Movie ID: {movieId}</li>
+      {movies.length > 0 ? (
+        <Row>
+          {movies.map((movie) => (
+            <Col className="mb-4" key={movie._id} md={3}>
+              <MovieCard
+                movieData={movie}
+                isFav={favorites.some((fav) => fav === movie._id)}
+                toggleFavorite={toggleFavorite}
+              />
+            </Col>
           ))}
-        </ul>
+        </Row>
       ) : (
         <p>No favorite movies added yet.</p>
       )}

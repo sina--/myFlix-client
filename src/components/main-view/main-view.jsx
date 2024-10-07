@@ -13,8 +13,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 export const MainView = () => {
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const storedToken = localStorage.getItem("token");
-  const [user, setUser] = useState(storedUser? storedUser : null);
-  const [token, setToken] = useState(storedToken? storedToken : null);
+  const [user, setUser] = useState(storedUser ? storedUser : null);
+  const [token, setToken] = useState(storedToken ? storedToken : null);
   const [movies, setMovies] = useState([]);
   const [favorites, setFavorites] = useState([]);
 
@@ -23,12 +23,14 @@ export const MainView = () => {
       return;
     }
     fetch("https://sw-movie-flix-5fc48d8b332a.herokuapp.com/movies", {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((response) => response.json())
       .then((data) => {
         setMovies(data);
-        const userFavs = data.filter((m) => storedUser.Favorites.includes(m._id));
+        const userFavs = data.filter((m) =>
+          storedUser.Favorites.includes(m._id),
+        );
         setFavorites(userFavs);
       })
       .catch((error) => {
@@ -39,56 +41,67 @@ export const MainView = () => {
   const toggleFavorite = (movieId) => {
     if (favorites.some((fav) => fav._id === movieId)) {
       console.log(`Removing favorite for movieId: ${movieId}`);
-      
-      fetch(`https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${storedUser.Username}/movies/${movieId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-          "Content-Type": "application/json",
+
+      fetch(
+        `https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${storedUser.Username}/movies/${movieId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
         },
-      })
+      )
         .then((response) => {
           if (!response.ok) throw new Error("Failed to remove from favorites");
           setFavorites(favorites.filter((fav) => fav._id !== movieId)); // Update local favorites
           // Optionally, refresh storedUser to get updated favorites
-          return fetch(`https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${storedUser.Username}`, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
+          return fetch(
+            `https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${storedUser.Username}`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
             },
-          });
+          );
         })
         .then((response) => response.json())
         .then((data) => {
-          storedUser.Favorites = data.Favorites;  // Update storedUser.Favorites
+          storedUser.Favorites = data.Favorites; // Update storedUser.Favorites
         })
         .catch((error) => {
           console.error("Error removing favorite:", error);
         });
-      
     } else {
       console.log(`Adding favorite for movieId: ${movieId}`);
-      
-      fetch(`https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${storedUser.Username}/movies/${movieId}`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-          "Content-Type": "application/json",
+
+      fetch(
+        `https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${storedUser.Username}/movies/${movieId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
         },
-      })
+      )
         .then((response) => {
           if (!response.ok) throw new Error("Failed to add to favorites");
           const movie = movies.find((m) => m._id === movieId); // Find movie by ID
-          setFavorites([...favorites, movie]);  // Add movie to favorites
+          setFavorites([...favorites, movie]); // Add movie to favorites
           // Optionally, refresh storedUser to get updated favorites
-          return fetch(`https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${storedUser.Username}`, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
+          return fetch(
+            `https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${storedUser.Username}`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
             },
-          });
+          );
         })
         .then((response) => response.json())
         .then((data) => {
-          storedUser.Favorites = data.Favorites;  // Update storedUser.Favorites
+          storedUser.Favorites = data.Favorites; // Update storedUser.Favorites
         })
         .catch((error) => {
           console.error("Error adding favorite:", error);
@@ -168,7 +181,7 @@ export const MainView = () => {
                   <>
                     {movies.map((movie) => (
                       <Col className="mb-4" key={movie._id} md={3}>
-                        <MovieCard 
+                        <MovieCard
                           movieData={movie}
                           isFav={favorites.some((fav) => fav._id === movie._id)}
                           toggleFavorite={toggleFavorite}
@@ -188,7 +201,7 @@ export const MainView = () => {
                   <Navigate to="/login" replace />
                 ) : (
                   <Col md={8}>
-                    <ProfileView user={user} />
+                    <ProfileView user={user} toggleFavorite={toggleFavorite} />
                   </Col>
                 )}
               </>
