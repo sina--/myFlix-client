@@ -62,20 +62,27 @@ export const ProfileView = ({ user, toggleFavorite }) => {
       Birthday: birthday,
     };
 
-    fetch("https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users", {
-      method: "PUT",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
+    fetch(
+      `https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${user.Username}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
       },
-    }).then((response) => {
-      if (response.ok) {
-        alert("Success");
-        window.location.reload();
-      } else {
+    )
+      .then((response) => response.json())
+      .then((updateUser) => {
+        alert("Profile updated");
+        localStorage.setItem("user", JSON.stringify(updateUser));
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("Error updating profile: ", error);
         alert("Profile update failed");
-      }
-    });
+      });
   };
 
   const deregister = (event) => {
@@ -117,7 +124,6 @@ export const ProfileView = ({ user, toggleFavorite }) => {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            required
             minLength="3"
           />
         </Form.Group>
@@ -127,7 +133,6 @@ export const ProfileView = ({ user, toggleFavorite }) => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            required
           />
         </Form.Group>
         <Form.Group controlId="formEmail">
@@ -136,7 +141,6 @@ export const ProfileView = ({ user, toggleFavorite }) => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            required
           />
         </Form.Group>
         <Form.Group controlId="formDate">
@@ -145,7 +149,6 @@ export const ProfileView = ({ user, toggleFavorite }) => {
             type="date"
             value={birthday}
             onChange={(e) => setBirthday(e.target.value)}
-            required
           />
         </Form.Group>
         <Button variant="primary" type="submit">
