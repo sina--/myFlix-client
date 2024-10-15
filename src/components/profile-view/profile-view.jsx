@@ -51,32 +51,49 @@ export const ProfileView = ({ user, toggleFavorite }) => {
     }
   }, [favorites]);
 
-  // TODO: Allow user profile updates
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const data = {
-      Username: username,
-      Password: password,
-      Email: email,
-      Birthday: birthday,
-    };
+    const updatedData = {};
+
+    if (username !== user.Username) {
+      updatedData.Username = username;
+    }
+    if (password !== "") {
+      updatedData.Password = password;
+    }
+    if (email !== user.Email) {
+      updatedData.Email = email;
+    }
+    if (birthday !== user.Birthday) {
+      updatedData.Birthday = birthday;
+    }
+
+    if (Object.keys(updatedData).length === 0) {
+      alert("No changes detected.");
+      return;
+    }
 
     fetch(
       `https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${user.Username}`,
       {
         method: "PUT",
-        body: JSON.stringify(data),
+        body: JSON.stringify(updatedData),
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json",
         },
       },
     )
-      .then((response) => response.json())
-      .then((updateUser) => {
-        alert("Profile updated");
-        localStorage.setItem("user", JSON.stringify(updateUser));
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Profile update failed");
+        }
+        return response.json();
+      })
+      .then((updatedUser) => {
+        alert("Profile updated successfully");
+        localStorage.setItem("user", JSON.stringify(updatedUser));
         navigate("/");
       })
       .catch((error) => {
@@ -87,13 +104,6 @@ export const ProfileView = ({ user, toggleFavorite }) => {
 
   const deregister = (event) => {
     event.preventDefault();
-
-    const data = {
-      Username: username,
-      Password: password,
-      Email: email,
-      Birthday: birthday,
-    };
 
     fetch(
       `https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${username}/deregister`,
@@ -151,8 +161,8 @@ export const ProfileView = ({ user, toggleFavorite }) => {
             onChange={(e) => setBirthday(e.target.value)}
           />
         </Form.Group>
-        <Button variant="primary" type="submit">
-          Submit
+        <Button variant="primary" type="submit" className="m-3">
+          Update
         </Button>
       </Form>
 
@@ -173,10 +183,12 @@ export const ProfileView = ({ user, toggleFavorite }) => {
         <p>No favorite movies added yet.</p>
       )}
 
-      <Button variant="danger" onClick={deregister}>
+      <Button variant="danger" onClick={deregister} className="m-3">
         Delete User
       </Button>
-      <Button onClick={() => navigate("/")}>Back</Button>
+      <Button className="m-3" onClick={() => navigate("/")}>
+        Back
+      </Button>
     </>
   );
 };
