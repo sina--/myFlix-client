@@ -59,14 +59,15 @@ export const ProfileView = ({ user, toggleFavorite }) => {
     if (username !== user.Username) {
       updatedData.Username = username;
     }
-    if (password !== "") {
-      updatedData.Password = password;
-    }
     if (email !== user.Email) {
       updatedData.Email = email;
     }
     if (birthday !== user.Birthday) {
       updatedData.Birthday = birthday;
+    }
+
+    if (password !== "") {
+      updatedData.Password = password;
     }
 
     if (Object.keys(updatedData).length === 0) {
@@ -85,19 +86,14 @@ export const ProfileView = ({ user, toggleFavorite }) => {
         },
       },
     )
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Profile update failed");
-        }
-        return response.json();
-      })
+      .then((response) => response.json())
       .then((updatedUser) => {
         alert("Profile updated successfully");
         localStorage.setItem("user", JSON.stringify(updatedUser));
         navigate("/");
       })
       .catch((error) => {
-        console.error("Error updating profile: ", error);
+        console.error("Error updating profile:", error);
         alert("Profile update failed");
       });
   };
@@ -142,7 +138,6 @@ export const ProfileView = ({ user, toggleFavorite }) => {
           <Form.Label>Password:</Form.Label>
           <Form.Control
             type="password"
-            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
@@ -184,11 +179,11 @@ export const ProfileView = ({ user, toggleFavorite }) => {
         <p>No favorite movies added yet.</p>
       )}
 
-      <Button variant="danger" onClick={deregister} className="m-3">
-        Delete User
-      </Button>
       <Button className="m-3" onClick={() => navigate("/")}>
         Back
+      </Button>
+      <Button variant="danger" onClick={deregister} className="m-3">
+        Delete User
       </Button>
     </>
   );
