@@ -127,7 +127,8 @@ export const ProfileView = ({ user, toggleFavorite }) => {
 
   return (
     <>
-      <Form onSubmit={handleSubmit}>
+      <h3 className="m-3">Update User Profile:</h3>
+      <Form onSubmit={handleSubmit} className="m-3">
         <Form.Group controlId="formUsername">
           <Form.Label>Username:</Form.Label>
           <Form.Control
@@ -166,9 +167,9 @@ export const ProfileView = ({ user, toggleFavorite }) => {
         </Button>
       </Form>
 
-      <h3>Your Favorite Movies:</h3>
+      <h3 className="m-3">Your Favorite Movies:</h3>
       {movies.length > 0 ? (
-        <Row>
+        <Row className="m-1">
           {movies.map((movie) => (
             <Col className="mb-4" key={movie._id} md={3}>
               <MovieCard
