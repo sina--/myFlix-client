@@ -54,8 +54,7 @@ export const MainView = () => {
       )
         .then((response) => {
           if (!response.ok) throw new Error("Failed to remove from favorites");
-          setFavorites(favorites.filter((fav) => fav._id !== movieId)); // Update local favorites
-          // Optionally, refresh storedUser to get updated favorites
+          setFavorites(favorites.filter((fav) => fav._id !== movieId));
           return fetch(
             `https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${storedUser.Username}`,
             {
@@ -67,7 +66,7 @@ export const MainView = () => {
         })
         .then((response) => response.json())
         .then((data) => {
-          storedUser.Favorites = data.Favorites; // Update storedUser.Favorites
+          storedUser.Favorites = data.Favorites;
         })
         .catch((error) => {
           console.error("Error removing favorite:", error);
@@ -87,9 +86,8 @@ export const MainView = () => {
       )
         .then((response) => {
           if (!response.ok) throw new Error("Failed to add to favorites");
-          const movie = movies.find((m) => m._id === movieId); // Find movie by ID
-          setFavorites([...favorites, movie]); // Add movie to favorites
-          // Optionally, refresh storedUser to get updated favorites
+          const movie = movies.find((m) => m._id === movieId);
+          setFavorites([...favorites, movie]);
           return fetch(
             `https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${storedUser.Username}`,
             {
@@ -101,7 +99,7 @@ export const MainView = () => {
         })
         .then((response) => response.json())
         .then((data) => {
-          storedUser.Favorites = data.Favorites; // Update storedUser.Favorites
+          storedUser.Favorites = data.Favorites;
         })
         .catch((error) => {
           console.error("Error adding favorite:", error);
@@ -163,7 +161,11 @@ export const MainView = () => {
                   <Col>No movies found!</Col>
                 ) : (
                   <Col md={8}>
-                    <MovieView movieData={movies} />
+                    <MovieView
+                      movieData={movies}
+                      favorites={favorites}
+                      toggleFavorite={toggleFavorite}
+                    />
                   </Col>
                 )}
               </>

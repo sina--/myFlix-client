@@ -7,7 +7,6 @@ import { FavoriteButton } from "../favorite-button/favorite-button.jsx";
 export const MovieCard = ({ movieData, isFav, toggleFavorite }) => {
   return (
     <Card className="h-100">
-      {/* Only the rest of the card links to the MovieView */}
       <Link
         to={`/movies/${encodeURIComponent(movieData._id)}`}
         className="text-decoration-none text-reset"
