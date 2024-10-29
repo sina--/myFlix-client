@@ -1,24 +1,43 @@
-import Button from "react-bootstrap/Button";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
+import { FavoriteButton } from "../favorite-button/favorite-button.jsx";
 
-export const MovieView = ({ movieData, onBackClick }) => {
+export const MovieView = ({ movieData, favorites, toggleFavorite }) => {
+  const { movieId } = useParams();
+  const movie = movieData.find((b) => b._id === movieId);
+  const isFav = favorites.some((fav) => fav._id === movie._id);
+
   return (
     <div>
       <div>
-        <img src={movieData.Poster} className="movie-poster" />
+        <img src={movie.Poster} className="movie-poster" />
+        <div>
+          <FavoriteButton
+            isFav={isFav}
+            movieId={movie._id}
+            toggleFavorite={toggleFavorite}
+          />
+        </div>
       </div>
       <div>
-        <span>Title: {movieData.Title}</span>
+        <span>Title: {movie.Title}</span>
       </div>
       <div>
-        <span>Description:<br/>{movieData.Description}</span>
+        <span>
+          Description:
+          <br />
+          {movie.Description}
+        </span>
       </div>
       <div>
-        <span>Director: {movieData.Director.Name}</span>
+        <span>Director: {movie.Director.Name}</span>
       </div>
       <div>
-        <span>Genre: {movieData.Genre.Name}</span>
+        <span>Genre: {movie.Genre.Name}</span>
       </div>
-      <Button onClick={onBackClick}>Back</Button>
+      <Link to={`/`}>
+        <button className="back-button">Back</button>
+      </Link>
     </div>
   );
 };

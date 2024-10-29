@@ -1,88 +1,216 @@
 import { useState, useEffect } from "react";
+import { NavigationBar } from "../navigation-bar/navigation-bar.jsx";
 import { MovieCard } from "../movie-card/movie-card.jsx";
 import { MovieView } from "../movie-view/movie-view.jsx";
 import { LoginView } from "../login-view/login-view.jsx";
 import { SignupView } from "../signup-view/signup-view.jsx";
+import { ProfileView } from "../profile-view/profile-view.jsx";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 export const MainView = () => {
   const storedUser = JSON.parse(localStorage.getItem("user"));
   const storedToken = localStorage.getItem("token");
-
-  const [user, setUser] = useState(storedUser? storedUser : null);
-  const [token, setToken] = useState(storedToken? storedToken : null);
+  const [user, setUser] = useState(storedUser ? storedUser : null);
+  const [token, setToken] = useState(storedToken ? storedToken : null);
   const [movies, setMovies] = useState([]);
-  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
     if (!token) {
       return;
     }
     fetch("https://sw-movie-flix-5fc48d8b332a.herokuapp.com/movies", {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((response) => response.json())
       .then((data) => {
         setMovies(data);
+        const userFavs = data.filter((m) =>
+          storedUser.Favorites.includes(m._id),
+        );
+        setFavorites(userFavs);
       })
       .catch((error) => {
         console.error("Error fetching movies:", error);
       });
   }, [token]);
 
+  const toggleFavorite = (movieId) => {
+    if (favorites.some((fav) => fav._id === movieId)) {
+      console.log(`Removing favorite for movieId: ${movieId}`);
+
+      fetch(
+        `https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${storedUser.Username}/movies/${movieId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        },
+      )
+        .then((response) => {
+          if (!response.ok) throw new Error("Failed to remove from favorites");
+          setFavorites(favorites.filter((fav) => fav._id !== movieId));
+          return fetch(
+            `https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${storedUser.Username}`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            },
+          );
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          storedUser.Favorites = data.Favorites;
+        })
+        .catch((error) => {
+          console.error("Error removing favorite:", error);
+        });
+    } else {
+      console.log(`Adding favorite for movieId: ${movieId}`);
+
+      fetch(
+        `https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${storedUser.Username}/movies/${movieId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+          },
+        },
+      )
+        .then((response) => {
+          if (!response.ok) throw new Error("Failed to add to favorites");
+          const movie = movies.find((m) => m._id === movieId);
+          setFavorites([...favorites, movie]);
+          return fetch(
+            `https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${storedUser.Username}`,
+            {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            },
+          );
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          storedUser.Favorites = data.Favorites;
+        })
+        .catch((error) => {
+          console.error("Error adding favorite:", error);
+        });
+    }
+  };
+
+  const onLoggedOut = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.clear();
+  };
+
   return (
-    <Row className="justify-content-md-center">
-      {!user ? (
-        <Col md={5}>
-          <LoginView
-            onLoggedIn={(user) => {
-              setUser(user);
-              setToken(token);
-            }}
+    <BrowserRouter>
+      <NavigationBar user={user} onLoggedOut={onLoggedOut} />
+      <Row className="justify-content-md-center">
+        <Routes>
+          <Route
+            path="/signup"
+            element={
+              <>
+                {user ? (
+                  <Navigate to="/" />
+                ) : (
+                  <Col md={5}>
+                    <SignupView />
+                  </Col>
+                )}
+              </>
+            }
           />
-          or
-          <SignupView />
-        </Col>
-      ) : selectedMovie ? (
-        <Col md={8}>
-          <MovieView 
-            movieData={selectedMovie}
-            onBackClick={() =>
-              setSelectedMovie(null)
-          }
+          <Route
+            path="/login"
+            element={
+              <>
+                {user ? (
+                  <Navigate to="/" />
+                ) : (
+                  <Col md={5}>
+                    <LoginView
+                      onLoggedIn={(user) => {
+                        setUser(user);
+                        setToken(token);
+                      }}
+                    />
+                  </Col>
+                )}
+              </>
+            }
           />
-        </Col>
-      ) : movies.length === 0 ? (
-        <div>No Movies Found!</div>
-      ) : (
-        <>
-          {movies.map((movie) => (
-            <Col className="mb-5" key={movie._id} md={3}>
-              <MovieCard 
-                movieData={movie}
-                onMovieClick={(newSelectedMovie) => {
-                  setSelectedMovie(newSelectedMovie);
-                }}
-              />
-            </Col>
-          ))}
-        </>
-      )}
-      {user && (
-        <Button 
-          className="mt-3"
-          onClick={() => {
-            setUser(null);
-            setToken(null);
-            setSelectedMovie(null);
-            localStorage.clear();
-          }}
-        >
-          Logout
-        </Button>
-      )}
-    </Row>
+          <Route
+            path="/movies/:movieId"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : movies.length === 0 ? (
+                  <Col>No movies found!</Col>
+                ) : (
+                  <Col md={8}>
+                    <MovieView
+                      movieData={movies}
+                      favorites={favorites}
+                      toggleFavorite={toggleFavorite}
+                    />
+                  </Col>
+                )}
+              </>
+            }
+          />
+          <Route
+            path="/"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : movies.length === 0 ? (
+                  <Col>No movies found!</Col>
+                ) : (
+                  <>
+                    {movies.map((movie) => (
+                      <Col className="mb-4" key={movie._id} md={3}>
+                        <MovieCard
+                          movieData={movie}
+                          isFav={favorites.some((fav) => fav._id === movie._id)}
+                          toggleFavorite={toggleFavorite}
+                        />
+                      </Col>
+                    ))}
+                  </>
+                )}
+              </>
+            }
+          />
+          <Route
+            path="/users/:userId"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <Col md={8}>
+                    <ProfileView user={user} toggleFavorite={toggleFavorite} />
+                  </Col>
+                )}
+              </>
+            }
+          />
+        </Routes>
+      </Row>
+    </BrowserRouter>
   );
 };
