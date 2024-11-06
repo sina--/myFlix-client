@@ -17,6 +17,7 @@ export const MainView = () => {
   const [token, setToken] = useState(storedToken ? storedToken : null);
   const [movies, setMovies] = useState([]);
   const [favorites, setFavorites] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (!token) {
@@ -107,6 +108,18 @@ export const MainView = () => {
     }
   };
 
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value.toLowerCase());
+  };
+
+  const filteredMovies = movies.filter((movie) => {
+    return (
+      movie.Title.toLowerCase().includes(searchQuery) ||
+      movie.Genre.Name.toLowerCase().includes(searchQuery) ||
+      movie.Director.Name.toLowerCase().includes(searchQuery)
+    );
+  });
+
   const onLoggedOut = () => {
     setUser(null);
     setToken(null);
@@ -177,19 +190,38 @@ export const MainView = () => {
               <>
                 {!user ? (
                   <Navigate to="/login" replace />
-                ) : movies.length === 0 ? (
-                  <Col>No movies found!</Col>
                 ) : (
                   <>
-                    {movies.map((movie) => (
-                      <Col className="mb-4" key={movie._id} md={3}>
-                        <MovieCard
-                          movieData={movie}
-                          isFav={favorites.some((fav) => fav._id === movie._id)}
-                          toggleFavorite={toggleFavorite}
-                        />
-                      </Col>
-                    ))}
+                    <div className="d-flex justify-content-center mb-3">
+                      <input
+                        type="text"
+                        placeholder="Search by title, genre, or director"
+                        value={searchQuery}
+                        onChange={handleSearchChange}
+                        style={{
+                          padding: "10px",
+                          width: "100%",
+                          maxWidth: "400px",
+                        }}
+                      />
+                    </div>
+                    {filteredMovies.length === 0 ? (
+                      <Col>No movies match your search!</Col>
+                    ) : (
+                      <>
+                        {filteredMovies.map((movie) => (
+                          <Col className="mb-4" key={movie._id} md={3}>
+                            <MovieCard
+                              movieData={movie}
+                              isFav={favorites.some(
+                                (fav) => fav._id === movie._id,
+                              )}
+                              toggleFavorite={toggleFavorite}
+                            />
+                          </Col>
+                        ))}
+                      </>
+                    )}
                   </>
                 )}
               </>
