@@ -129,120 +129,125 @@ export const MainView = () => {
   return (
     <BrowserRouter>
       <NavigationBar user={user} onLoggedOut={onLoggedOut} />
-      <Row className="justify-content-md-center">
-        <Routes>
-          <Route
-            path="/signup"
-            element={
-              <>
-                {user ? (
-                  <Navigate to="/" />
-                ) : (
-                  <Col md={5}>
-                    <SignupView />
-                  </Col>
-                )}
-              </>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <>
-                {user ? (
-                  <Navigate to="/" />
-                ) : (
-                  <Col md={5}>
-                    <LoginView
-                      onLoggedIn={(user) => {
-                        setUser(user);
-                        setToken(token);
-                      }}
-                    />
-                  </Col>
-                )}
-              </>
-            }
-          />
-          <Route
-            path="/movies/:movieId"
-            element={
-              <>
-                {!user ? (
-                  <Navigate to="/login" replace />
-                ) : movies.length === 0 ? (
-                  <Col>No movies found!</Col>
-                ) : (
-                  <Col md={8}>
-                    <MovieView
-                      movieData={movies}
-                      favorites={favorites}
-                      toggleFavorite={toggleFavorite}
-                    />
-                  </Col>
-                )}
-              </>
-            }
-          />
-          <Route
-            path="/"
-            element={
-              <>
-                {!user ? (
-                  <Navigate to="/login" replace />
-                ) : (
-                  <>
-                    <div className="d-flex justify-content-center mb-3">
-                      <input
-                        type="text"
-                        placeholder="Search by title, genre, or director"
-                        value={searchQuery}
-                        onChange={handleSearchChange}
-                        style={{
-                          padding: "10px",
-                          width: "100%",
-                          maxWidth: "400px",
+      <div className="pt-4">
+        <Row className="justify-content-md-center">
+          <Routes>
+            <Route
+              path="/signup"
+              element={
+                <>
+                  {user ? (
+                    <Navigate to="/" />
+                  ) : (
+                    <Col md={5}>
+                      <SignupView />
+                    </Col>
+                  )}
+                </>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <>
+                  {user ? (
+                    <Navigate to="/" />
+                  ) : (
+                    <Col md={5}>
+                      <LoginView
+                        onLoggedIn={(user) => {
+                          setUser(user);
+                          setToken(token);
                         }}
                       />
-                    </div>
-                    {filteredMovies.length === 0 ? (
-                      <Col>No movies match your search!</Col>
-                    ) : (
-                      <>
-                        {filteredMovies.map((movie) => (
-                          <Col className="mb-4" key={movie._id} md={3}>
-                            <MovieCard
-                              movieData={movie}
-                              isFav={favorites.some(
-                                (fav) => fav._id === movie._id,
-                              )}
-                              toggleFavorite={toggleFavorite}
-                            />
-                          </Col>
-                        ))}
-                      </>
-                    )}
-                  </>
-                )}
-              </>
-            }
-          />
-          <Route
-            path="/users/:userId"
-            element={
-              <>
-                {!user ? (
-                  <Navigate to="/login" replace />
-                ) : (
-                  <Col md={8}>
-                    <ProfileView user={user} toggleFavorite={toggleFavorite} />
-                  </Col>
-                )}
-              </>
-            }
-          />
-        </Routes>
-      </Row>
+                    </Col>
+                  )}
+                </>
+              }
+            />
+            <Route
+              path="/movies/:movieId"
+              element={
+                <>
+                  {!user ? (
+                    <Navigate to="/login" replace />
+                  ) : movies.length === 0 ? (
+                    <Col>No movies found!</Col>
+                  ) : (
+                    <Col md={8}>
+                      <MovieView
+                        movieData={movies}
+                        favorites={favorites}
+                        toggleFavorite={toggleFavorite}
+                      />
+                    </Col>
+                  )}
+                </>
+              }
+            />
+            <Route
+              path="/"
+              element={
+                <>
+                  {!user ? (
+                    <Navigate to="/login" replace />
+                  ) : (
+                    <>
+                      <div className="d-flex justify-content-center mb-3">
+                        <input
+                          type="text"
+                          placeholder="Search by title, genre, or director"
+                          value={searchQuery}
+                          onChange={handleSearchChange}
+                          style={{
+                            padding: "10px",
+                            width: "100%",
+                            maxWidth: "400px",
+                          }}
+                        />
+                      </div>
+                      {filteredMovies.length === 0 ? (
+                        <Col>No movies match your search!</Col>
+                      ) : (
+                        <>
+                          {filteredMovies.map((movie) => (
+                            <Col className="mb-4" key={movie._id} md={3}>
+                              <MovieCard
+                                movieData={movie}
+                                isFav={favorites.some(
+                                  (fav) => fav._id === movie._id,
+                                )}
+                                toggleFavorite={toggleFavorite}
+                              />
+                            </Col>
+                          ))}
+                        </>
+                      )}
+                    </>
+                  )}
+                </>
+              }
+            />
+            <Route
+              path="/users/:userId"
+              element={
+                <>
+                  {!user ? (
+                    <Navigate to="/login" replace />
+                  ) : (
+                    <Col md={8}>
+                      <ProfileView
+                        user={user}
+                        toggleFavorite={toggleFavorite}
+                      />
+                    </Col>
+                  )}
+                </>
+              }
+            />
+          </Routes>
+        </Row>
+      </div>
     </BrowserRouter>
   );
 };
