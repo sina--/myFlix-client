@@ -1,3 +1,4 @@
+@import "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap";
 .profile-pic {
   color: #fff;
   background-color: #007bff;
@@ -14,6 +15,41 @@
 .fav-btn {
   backdrop-filter: blur(10px);
   background-color: #f1f1f14d;
+}
+
+.movie-view-container {
+  padding: 20px;
+}
+
+.movie-view-content {
+  align-items: flex-start;
+  gap: 20px;
+  display: flex;
+}
+
+.movie-poster-container {
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+}
+
+.movie-poster {
+  max-width: 200px;
+  height: auto;
+}
+
+.movie-details {
+  flex: 1;
+}
+
+.back-button {
+  cursor: pointer;
+  margin-top: 10px;
+  padding: 5px 10px;
+}
+
+.fav-btn {
+  margin-left: 10px;
 }
 
 *, :after, :before {
@@ -7376,6 +7412,10 @@ button, input, optgroup, select, textarea {
   }
 }
 
+* {
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Open Sans, Helvetica Neue, sans-serif;
+}
+
 .movie-poster {
   width: 300px;
   height: auto;
@@ -7454,18 +7494,18 @@ button, input, optgroup, select, textarea {
   --bs-body-font-size: 1rem;
   --bs-body-font-weight: 400;
   --bs-body-line-height: 1.5;
-  --bs-body-color: #c0caf5;
-  --bs-body-color-rgb: 192, 202, 245;
-  --bs-body-bg: #414868;
-  --bs-body-bg-rgb: 65, 72, 104;
+  --bs-body-color: #050301;
+  --bs-body-color-rgb: 5, 3, 1;
+  --bs-body-bg: #fefefa;
+  --bs-body-bg-rgb: 254, 254, 250;
   --bs-emphasis-color: #000;
   --bs-emphasis-color-rgb: 0, 0, 0;
-  --bs-secondary-color: #c0caf5bf;
-  --bs-secondary-color-rgb: 192, 202, 245;
+  --bs-secondary-color: #050301bf;
+  --bs-secondary-color-rgb: 5, 3, 1;
   --bs-secondary-bg: #e9ecef;
   --bs-secondary-bg-rgb: 233, 236, 239;
-  --bs-tertiary-color: #c0caf580;
-  --bs-tertiary-color-rgb: 192, 202, 245;
+  --bs-tertiary-color: #05030180;
+  --bs-tertiary-color-rgb: 5, 3, 1;
   --bs-tertiary-bg: #f8f9fa;
   --bs-tertiary-bg-rgb: 248, 249, 250;
   --bs-heading-color: inherit;
@@ -7475,7 +7515,7 @@ button, input, optgroup, select, textarea {
   --bs-link-hover-color: #4a80f4;
   --bs-link-hover-color-rgb: 74, 128, 244;
   --bs-code-color: #d63384;
-  --bs-highlight-color: #c0caf5;
+  --bs-highlight-color: #050301;
   --bs-highlight-bg: #fff3cd;
   --bs-border-width: 1px;
   --bs-border-style: solid;
@@ -10034,11 +10074,11 @@ textarea.form-control-lg {
 }
 
 .form-range:focus::-webkit-slider-thumb {
-  box-shadow: 0 0 0 1px #414868, 0 0 0 .25rem #7aa2f740;
+  box-shadow: 0 0 0 1px #fefefa, 0 0 0 .25rem #7aa2f740;
 }
 
 .form-range:focus::-moz-range-thumb {
-  box-shadow: 0 0 0 1px #414868, 0 0 0 .25rem #7aa2f740;
+  box-shadow: 0 0 0 1px #fefefa, 0 0 0 .25rem #7aa2f740;
 }
 
 .form-range::-moz-focus-outer {
@@ -11483,7 +11523,7 @@ textarea.form-control-lg {
   --bs-navbar-toggler-padding-y: .25rem;
   --bs-navbar-toggler-padding-x: .75rem;
   --bs-navbar-toggler-font-size: 1.25rem;
-  --bs-navbar-toggler-icon-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28192, 202, 245, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+  --bs-navbar-toggler-icon-bg: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%285, 3, 1, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
   --bs-navbar-toggler-border-color: rgba(var(--bs-emphasis-color-rgb), .15);
   --bs-navbar-toggler-border-radius: var(--bs-border-radius);
   --bs-navbar-toggler-focus-width: .25rem;
@@ -12157,7 +12197,7 @@ textarea.form-control-lg {
   --bs-accordion-btn-padding-y: 1rem;
   --bs-accordion-btn-color: var(--bs-body-color);
   --bs-accordion-btn-bg: var(--bs-accordion-bg);
-  --bs-accordion-btn-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23c0caf5' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M2 5L8 11L14 5'/%3e%3c/svg%3e");
+  --bs-accordion-btn-icon: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23050301' stroke-linecap='round' stroke-linejoin='round'%3e%3cpath d='M2 5L8 11L14 5'/%3e%3c/svg%3e");
   --bs-accordion-btn-icon-width: 1.25rem;
   --bs-accordion-btn-icon-transform: rotate(-180deg);
   --bs-accordion-btn-icon-transition: transform .2s ease-in-out;
