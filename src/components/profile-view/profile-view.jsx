@@ -1,16 +1,12 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { useState, useEffect } from "react";
-import { Button, Form } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { Button, Form, Row, Col } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { MovieCard } from "../movie-card/movie-card.jsx";
 
 export const ProfileView = ({ user, toggleFavorite }) => {
   const [username, setUsername] = useState(user.Username);
-  const [password, setPassword] = useState("password");
+  const [password, setPassword] = useState("");
   const [email, setEmail] = useState(user.Email);
   const [birthday, setBirthday] = useState(user.Birthday);
   const [favorites, setFavorites] = useState([]);
@@ -53,22 +49,12 @@ export const ProfileView = ({ user, toggleFavorite }) => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     const updatedData = {};
 
-    if (username !== user.Username) {
-      updatedData.Username = username;
-    }
-    if (email !== user.Email) {
-      updatedData.Email = email;
-    }
-    if (birthday !== user.Birthday) {
-      updatedData.Birthday = birthday;
-    }
-
-    if (password !== "") {
-      updatedData.Password = password;
-    }
+    if (username !== user.Username) updatedData.Username = username;
+    if (email !== user.Email) updatedData.Email = email;
+    if (birthday !== user.Birthday) updatedData.Birthday = birthday;
+    if (password !== "") updatedData.Password = password;
 
     if (Object.keys(updatedData).length === 0) {
       alert("No changes detected.");
@@ -100,7 +86,6 @@ export const ProfileView = ({ user, toggleFavorite }) => {
 
   const deregister = (event) => {
     event.preventDefault();
-
     fetch(
       `https://sw-movie-flix-5fc48d8b332a.herokuapp.com/users/${username}/deregister`,
       {
@@ -122,49 +107,68 @@ export const ProfileView = ({ user, toggleFavorite }) => {
   };
 
   return (
-    <>
-      <h3 className="m-3">Update User Profile:</h3>
-      <Form onSubmit={handleSubmit} className="m-3">
-        <Form.Group controlId="formUsername">
-          <Form.Label>Username:</Form.Label>
-          <Form.Control
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            minLength="3"
-          />
-        </Form.Group>
-        <Form.Group controlId="formPassword">
-          <Form.Label>Password:</Form.Label>
-          <Form.Control
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group controlId="formEmail">
-          <Form.Label>Email:</Form.Label>
-          <Form.Control
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group controlId="formDate">
-          <Form.Label>Birthday:</Form.Label>
-          <Form.Control
-            type="date"
-            value={birthday}
-            onChange={(e) => setBirthday(e.target.value)}
-          />
-        </Form.Group>
-        <Button variant="primary" type="submit" className="m-3">
+    <div className="profile-view-container p-3">
+      <h3 className="mb-4">Update User Profile:</h3>
+      <Form onSubmit={handleSubmit}>
+        <Row>
+          <Col md={6}>
+            <Form.Group controlId="formUsername" className="mb-3">
+              <Form.Label>Username:</Form.Label>
+              <Form.Control
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                minLength="3"
+              />
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Form.Group controlId="formPassword" className="mb-3">
+              <Form.Label>Password:</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Enter new password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={6}>
+            <Form.Group controlId="formEmail" className="mb-3">
+              <Form.Label>Email:</Form.Label>
+              <Form.Control
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+          <Col md={6}>
+            <Form.Group controlId="formDate" className="mb-3">
+              <Form.Label>Birthday:</Form.Label>
+              <Form.Control
+                type="date"
+                value={birthday}
+                onChange={(e) => setBirthday(e.target.value)}
+              />
+            </Form.Group>
+          </Col>
+        </Row>
+        <Button variant="primary" type="submit" className="me-2">
           Update
+        </Button>
+        <Button variant="danger" onClick={deregister} className="me-2">
+          Delete User
+        </Button>
+        <Button variant="secondary" onClick={() => navigate("/")}>
+          Back
         </Button>
       </Form>
 
-      <h3 className="m-3">Your Favorite Movies:</h3>
+      <h3 className="mt-5 mb-4">Your Favorite Movies:</h3>
       {movies.length > 0 ? (
-        <Row className="m-1">
+        <Row>
           {movies.map((movie) => (
             <Col className="mb-4" key={movie._id} md={3}>
               <MovieCard
@@ -178,13 +182,6 @@ export const ProfileView = ({ user, toggleFavorite }) => {
       ) : (
         <p>No favorite movies added yet.</p>
       )}
-
-      <Button className="m-3" onClick={() => navigate("/")}>
-        Back
-      </Button>
-      <Button variant="danger" onClick={deregister} className="m-3">
-        Delete User
-      </Button>
-    </>
+    </div>
   );
 };
